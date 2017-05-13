@@ -3,9 +3,7 @@ from bs4 import BeautifulSoup
 
 scraped_file = 'scrapings.csv'
 base_url = 'http://www.photolib.noaa.gov/brs/'
-
 page = 'rfind%s.htm' # % page_no
-
 
 page_no = 1
 while True:
@@ -17,7 +15,7 @@ while True:
         soup = BeautifulSoup(urllib2.urlopen(url).read())
     except urllib2.HTTPError:
         print "no more pages! "
-    
+
     all_images = soup.find_all('img', src=True)[9:]  # first 9 links are nav
 
     for image in all_images:
