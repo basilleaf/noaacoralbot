@@ -16,6 +16,7 @@ while True:
         soup = BeautifulSoup(urllib2.urlopen(url).read() ,"html.parser")
     except urllib2.HTTPError:
         print "no more pages! "
+        sys.exit()
 
     all_images = soup.find_all('img', src=True)[9:]  # first 9 links are nav
 
