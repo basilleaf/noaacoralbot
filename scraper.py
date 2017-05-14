@@ -1,4 +1,5 @@
-import urllib2, re, csv
+import sys, re, csv
+import urllib2
 from bs4 import BeautifulSoup
 
 scraped_file = 'scrapings.csv'
@@ -12,7 +13,7 @@ while True:
     page_no = page_no + 1
 
     try:
-        soup = BeautifulSoup(urllib2.urlopen(url).read())
+        soup = BeautifulSoup(urllib2.urlopen(url).read() ,"html.parser")
     except urllib2.HTTPError:
         print "no more pages! "
 
@@ -20,7 +21,7 @@ while True:
 
     for image in all_images:
         src = image.attrs['src']
-        img_id = src.split('/')[-1].split('.')[0]
+        img_id = src.split('/')[-1].split('.')[0].strip()
 
         # with img_id we know some urls..
         hi_res = 'http://www.photolib.noaa.gov/bigs/%s.jpg' % img_id
@@ -29,7 +30,7 @@ while True:
 
         print detail_url
         # script eh image's detail page to get the photo credit, title
-        detail_soup = BeautifulSoup(urllib2.urlopen(detail_url).read())
+        detail_soup = BeautifulSoup(urllib2.urlopen(detail_url).read(), "html.parser")
         title = detail_soup.find_all('p')[2].get_text().strip()
 
         if not title:
@@ -54,6 +55,10 @@ while True:
         credit = credit.replace(',',' ')
 
         image_info = (img_id, title, credit, detail_url, hi_res, modest)
+
+        if len(image_info) < 6:
+            print "skipping %s" % image_info
+            continue  # we didn't get all the info, do not save
 
         with open(scraped_file, 'a') as csvfile:
             csv_writer = csv.writer(csvfile)
