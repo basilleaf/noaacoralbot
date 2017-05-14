@@ -55,6 +55,10 @@ while True:
         title = title.replace(',',' ')
         credit = credit.replace(',',' ')
 
+        # replace multiple spaces
+        title = ' '.join(title.split())
+        credit = ' '.join(credit.split())
+
         image_info = (img_id, title, credit, detail_url, hi_res, modest)
 
         if len(image_info) < 6:
