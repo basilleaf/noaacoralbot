@@ -29,8 +29,8 @@ tweeted = list(open(tweeted_log))
 not_yet_tweeted = [line for line in all_images if line not in tweeted]
 
 if not not_yet_tweeted:
-    # we've tweeted them all! reset the tweeted.log back to zero #todo
-    pass
+    # we've tweeted them all! reset the tweeted.log back to zero
+    open(tweeted_log, 'w').close()
 
 # pick a random line from the not_yet_tweeted list
 image_info = random.choice(not_yet_tweeted).split(',')
@@ -53,7 +53,7 @@ try:
     api.update_with_media(img_path, status=tweet_with_link)
     print "tweeted %s" % (tweet_with_link)
 except e:
-    # try the modest size
+    # twitter said no, try the modest size image instead
     print e # coding=utf-8
     print "trying for modest size"
     os.remove(img_path)  # remove the local hi_res
