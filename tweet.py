@@ -46,7 +46,7 @@ logger.debug(image_info)
 # download image locally
 img_path = fetch_image(hi_res)
 if max_img_file_size < os.path.getsize(img_path):  # img file too big
-    img_path = shrink(img_path)
+    img_path = shrink(img_path, max_img_file_size)
 
 # compose tweet
 tweet = "%s | %s" % (title, credit)
