@@ -19,7 +19,8 @@ all_images_csv = base_path + 'scrapings.csv'
 max_img_file_size = 3e+6  # 3 megabytes twitter
 
 emoji_dividers = ["🐠" ,"🐟" , "🐡", "🐙", "🐚"]
-divider = random.choice(emoji_dividers)
+random.shuffle(emoji_dividers)
+divider = emoji_dividers[0]
 
 def fetch_image(url):
     """ fetches remote image, returns full path local copy """
