@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-import os, random, csv, urllib
+import os, random, csv, urllib, logging, StringIO
 import PIL.Image as PIL
 import tweepy
-import traceback
-import logging
 from resize import shrink
-import StringIO
-
 from secrets import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET
 
 logging.basicConfig(level=logging.ERROR)
@@ -16,11 +12,7 @@ logger = logging.getLogger(__name__)
 base_path = '/home/befoream/noaacoralbot/'
 tweeted_log = base_path + 'tweeted.log'
 all_images_csv = base_path + 'scrapings.csv'
-max_img_file_size = 3e+6  # 3 megabytes twitter
-
-emoji_dividers = ["🐠" ,"🐟" , "🐡", "🐙", "🐚"]
-random.shuffle(emoji_dividers)
-divider = emoji_dividers[0]
+max_img_file_size = 3e+6  # 3 megabytes twitter limit
 
 def fetch_image(url):
     """ fetches remote image, returns full path local copy """
@@ -28,6 +20,11 @@ def fetch_image(url):
     urllib.urlretrieve(url, local_img_file)
     img_path = os.path.abspath(local_img_file)
     return img_path
+
+# pick an emoji
+emoji_dividers = ["🐠" ,"🐟" , "🐡", "🐙", "🐚"]
+random.shuffle(emoji_dividers)
+divider = emoji_dividers[0]
 
 # twitter auth stuff
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
