@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os, random, csv, urllib
 import PIL.Image as PIL
 import tweepy
@@ -8,7 +9,7 @@ import StringIO
 
 from secrets import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
 # file names
@@ -16,6 +17,9 @@ base_path = '/home/befoream/noaacoralbot/'
 tweeted_log = base_path + 'tweeted.log'
 all_images_csv = base_path + 'scrapings.csv'
 max_img_file_size = 3e+6  # 3 megabytes twitter
+
+emoji_dividers = ["🐠" ,"🐟" , "🐡"]
+divider = random.choice(emoji_dividers)
 
 def fetch_image(url):
     """ fetches remote image, returns full path local copy """
@@ -47,19 +51,20 @@ logger.debug(image_info)
 img_path = fetch_image(hi_res)
 if max_img_file_size < os.path.getsize(img_path):  # img file too big
     img_path = shrink(img_path, max_img_file_size)
+    logger.error("image resized: %s" % img_path)
 
 # compose tweet
-tweet = "%s | %s" % (title, credit)
+tweet = "%s %s %s" % (title, divider, credit)
 # is tweet too long? if so then trim title:
-title_len_max = 140 - 3 - 23 - len(credit)  # title has a max length
-                                            # twitter's 140 minus 23 (link)
-                                            # 3 (title/credit divider)
+title_len_max = 140 - len(divider) - 23 - len(credit)  # title has a max length
+                                            # twitter's 140 minus 23 (for link)
+                                            # len(divider) (title/credit divider)
                                             # and preserve credit in full
 if len(tweet) > title_len_max:
     # trim title
-    tweet = "%s.. | %s" % (title[0:title_len_max-2], credit)  # -2 for ellipsis
+    tweet = "%s.. %s %s" % (title[0:title_len_max-2], divider, credit)  # -2 for ellipsis
 
-tweet = "%s | %s" % (title[0:title_len_max], credit)
+tweet = "%s %s %s" % (title[0:title_len_max], divider, credit)
 tweet_with_link = "%s %s" % (tweet, detail_url)
 
 # tweet!
