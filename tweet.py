@@ -18,7 +18,7 @@ tweeted_log = base_path + 'tweeted.log'
 all_images_csv = base_path + 'scrapings.csv'
 max_img_file_size = 3e+6  # 3 megabytes twitter
 
-emoji_dividers = ["🐠" ,"🐟" , "🐡"]
+emoji_dividers = ["🐠" ,"🐟" , "🐡", "🐙", "🐚"]
 divider = random.choice(emoji_dividers)
 
 def fetch_image(url):
