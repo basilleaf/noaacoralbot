@@ -54,15 +54,15 @@ if max_img_file_size < os.path.getsize(img_path):  # img file too big
 # compose tweet
 tweet = "%s %s %s" % (title, divider, credit)
 # is tweet too long? if so then trim title:
-title_len_max = 140 - len(divider) - 23 - len(credit)  # title has a max length
+title_len_max = 140 - len(divider) - 23 - len(credit) - 2  # title has a max length
                                             # twitter's 140 minus 23 (for link)
                                             # len(divider) (title/credit divider)
                                             # and preserve credit in full
+                                            # - 2 for the 2 spaces
 if len(tweet) > title_len_max:
     # trim title
     tweet = "%s.. %s %s" % (title[0:title_len_max-2], divider, credit)  # -2 for ellipsis
 
-tweet = "%s %s %s" % (title[0:title_len_max], divider, credit)
 tweet_with_link = "%s %s" % (tweet, detail_url)
 
 # tweet!
