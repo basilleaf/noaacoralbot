@@ -15,7 +15,7 @@ def shrink(img_path, max_img_file_size, new_width=0, new_height=0):
 
     resize_ratio = new_width/orig_width
     new_height = resize_ratio * orig_height
-    new_img_file_name = "%s_%s_%s.%s" % (img_file_name.split('.')[0], str(int(new_width)), str(int(new_height)), img_file_name.split('.')[1])
+    new_img_file_name = "%s_%s_%s.%s" % (img_path.split('.')[0], str(int(new_width)), str(int(new_height)), img_path.split('.')[1])
 
     img.resize((int(orig_width), int(orig_height)), PIL.ANTIALIAS)
     img.save(new_img_file_name, quality=90)
@@ -26,4 +26,4 @@ def shrink(img_path, max_img_file_size, new_width=0, new_height=0):
         os.remove(base_path + new_img_file_name)  # clean up
         return resize(img_path, (new_width-50, new_height-50), quality=90)
 
-    return new_image
+    return new_img_file_name
