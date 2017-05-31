@@ -45,6 +45,10 @@ image_info = random.choice(not_yet_tweeted).split(',')
 logger.debug(image_info)
 (img_id, title, credit, detail_url, hi_res, modest) = [f.strip() for f in image_info]
 
+# trim credit a bit
+credit = credit.replace('The Photo Collection of ','')
+credit = credit.replace('Photo Collection of ','')
+
 # download image locally
 img_path = fetch_image(hi_res)
 if max_img_file_size < os.path.getsize(img_path):  # img file too big
@@ -60,8 +64,9 @@ title_len_max = 140 - len(divider) - 23 - len(credit) - 2  # title has a max len
                                             # and preserve credit in full
                                             # - 2 for the 2 spaces
 if len(tweet) > title_len_max:
-    # trim title
-    tweet = "%s.. %s %s" % (title[0:title_len_max-2], divider, credit)  # -2 for ellipsis
+    # trim title, -2 for the ellipses, split on words not letters
+    trimmed_title = ' '.join(title[0:title_len_max-2].split(' ')[0:-1])
+    tweet = "%s.. %s %s" % (trimmed_title, divider, credit)
 
 tweet_with_link = "%s %s" % (tweet, detail_url)
 
