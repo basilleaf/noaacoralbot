@@ -79,5 +79,13 @@ with open(tweeted_log, 'a') as csvfile:
     csv_writer = csv.writer(csvfile)
     csv_writer.writerow(list(image_info))
 
+# do followbacks
+for follower in tweepy.Cursor(api.followers).items():
+    try:
+        follower.follow()
+        print 'followed: ' + follower.screen_name
+    except tweepy.error.TweepError:
+        pass
+    
 # remove local image
 os.remove(img_path)
