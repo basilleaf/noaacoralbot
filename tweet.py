@@ -80,12 +80,40 @@ with open(tweeted_log, 'a') as csvfile:
     csv_writer.writerow(list(image_info))
 
 # do followbacks
-for follower in tweepy.Cursor(api.followers).items():
-    try:
-        follower.follow()
-        print 'followed: ' + follower.screen_name
-    except tweepy.error.TweepError:
-        pass
+SCREEN_NAME = 'noaacoralbot'
+followers = api.followers_ids(SCREEN_NAME)
+
+followers = []
+for block in tweepy.Cursor(api.followers_ids, SCREEN_NAME).items():
+  followers += [block]
+  
+  
+friends = []  
+for block in tweepy.Cursor(api.friends_ids, SCREEN_NAME).items():
+  friends += [block]
+
+  
+to_follow = list(set(followers).difference(friends))
+
+for f in to_follow:
+      try:
+        api.create_friendship(f)
+        print('followed: ' + api.get_user(f).screen_name)
+      except tweepy.error.TweepError, e:
+          if 'unable to follow more' in  e.message[0]['message']:
+              print(e.message[0]['message'])
+              break
+          if 'already requested' in  e.message[0]['message']:
+              pass
+
+
+# unfollow unfollowers
+exceptions = ['Kaleidopix']
+for f in friends:
+    if f not in followers:
+        if api.get_user(f).screen_name not in exceptions:
+            print "Unfollowing {0}".format(api.get_user(f).screen_name)
+            api.destroy_friendship(f)
     
 # remove local image
 os.remove(img_path)
